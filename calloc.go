@@ -20,6 +20,8 @@ func checkPtr(ptr unsafe.Pointer) unsafe.Pointer {
 	return ptr
 }
 
+// Works like make. Pass it a slice type.
+//
 // Do not put pointers to GCed data in structs allocated with this
 // method. They will be collected.
 func Make(t reflect.Type, length, capacity int) interface{} {
@@ -40,6 +42,9 @@ func Make(t reflect.Type, length, capacity int) interface{} {
 }
 
 // Works like new. Pass it a pointer type.
+//
+// Do not put pointers to GCed data in structs allocated with this
+// method. They will be collected.
 func New(t reflect.Type) interface{} {
 	if t.Kind() != reflect.Ptr {
 		panic(fmt.Errorf("Must be a pointer, %v", t))
