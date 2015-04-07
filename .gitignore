@@ -1,0 +1,10 @@
+*swp
+*swo
+pkg
+bin
+*.g
+*.png
+data
+cpuprof
+memprof
+
