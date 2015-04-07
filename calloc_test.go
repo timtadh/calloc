@@ -3,13 +3,13 @@ package calloc
 import "testing"
 
 import (
-	"fmt"
 	"reflect"
 )
 
 
 func TestMalloc(t *testing.T) {
-	b := Malloc(24)
+	var b []byte
+	b = Make(reflect.TypeOf(b), 24, 24).([]byte)
 	defer Free(b)
 	if len(b) != 24 {
 		t.Fatal("b was the wrong length")
@@ -29,7 +29,6 @@ func TestMake(t *testing.T) {
 	var s []testStruct
 	s = Make(reflect.TypeOf(s), 0, 10).([]testStruct)
 	defer Free(s)
-	fmt.Println(s, len(s), cap(s))
 
 	if s == nil {
 		t.Fatal("s was nil")

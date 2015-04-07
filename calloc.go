@@ -13,10 +13,6 @@ import (
 	"unsafe"
 )
 
-import (
-	"github.com/timtadh/fs2/slice"
-)
-
 func checkPtr(ptr unsafe.Pointer) unsafe.Pointer {
 	if ptr == nil {
 		panic(fmt.Errorf("Unexpected nil ptr"))
@@ -33,8 +29,8 @@ func Make(t reflect.Type, length, capacity int) interface{} {
 	}
 	size := t.Elem().Size()
 	ptr = checkPtr(C.calloc(C.size_t(capacity), C.size_t(size)))
-	s := &slice.Slice{
-		Array: ptr,
+	s := &reflect.SliceHeader{
+		Data: uintptr(ptr),
 		Len: length,
 		Cap: capacity,
 	}
@@ -71,7 +67,7 @@ func Free(i interface{}) {
 func freeSlice(i interface{}) {
 	ptr := unsafe.Pointer(&i) // pointer to interface
 	inter := (*[2]uintptr)(ptr) // unpace the interface
-	s := *(*slice.Slice)(unsafe.Pointer((*inter)[1])) // grab the pointer to the slice data
-	C.free(s.Array)
+	s := *(*reflect.SliceHeader)(unsafe.Pointer((*inter)[1])) // grab the pointer to the slice data
+	C.free(unsafe.Pointer(s.Data))
 }
 
